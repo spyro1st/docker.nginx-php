@@ -1,7 +1,7 @@
 # Docker TYPO3 CMS - Debian Wheezy
 
-This is basically the same container as hbokh/docker-typo3-cms, but with the Debian Wheezy base image the result is a far smaller image.  
-PHP 5.5 and nginx are taken from [dotdeb](http://www.dotdeb.org/).  
+This is basically the same container as hbokh/docker-typo3-cms, but with the Debian Wheezy base image the result is a *far smaller image*.  
+Packages for PHP 5.5 and nginx are taken from [dotdeb](http://www.dotdeb.org/).  
 
 This container comes with the latest [TYPO3 CMS](http://typo3.org/typo3-cms/) version 6.2 (LTS) on NGINX and PHP-FPM.  
 Great for testing and demo's.   
@@ -10,7 +10,7 @@ Inspired by and borrowed from [paimpozhil/magento-docker](https://registry.hub.d
 ## Start the containers
 
 The TYPO3-container needs a MySQL-container to link to.  
-I used paintedfox/mariadb (which equals MySQL 5.5).  
+I used [paintedfox/mariadb](https://registry.hub.docker.com/u/paintedfox/mariadb/) (which equals MySQL 5.5).  
 
 First install and start the database:  
 `docker run -td --name mariadb -e USER=user -e PASS=password paintedfox/mariadb`
