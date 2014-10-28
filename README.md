@@ -1,7 +1,8 @@
 # Docker TYPO3 CMS - Debian Wheezy
 
-This is basically the same container as hbokh/docker-typo3-cms, but with the Debian Wheezy base image the result is a **far smaller image**.  
-Packages for PHP 5.5 and nginx are taken from [dotdeb](http://www.dotdeb.org/).  
+This is basically the same container as hbokh/docker-typo3-cms, but with the Debian Wheezy base image the result is a **far smaller image** than with Ubuntu!  
+For more information see [Building good docker images](http://jonathan.bergknoff.com/journal/building-good-docker-images).  
+The packages for PHP 5.5 and nginx are taken from [Ddotdeb](http://www.dotdeb.org/).  
 
 This container comes with the latest [TYPO3 CMS](http://typo3.org/typo3-cms/) version 6.2 (LTS) on NGINX and PHP-FPM.  
 Great for testing and demo's.   
