@@ -1,15 +1,20 @@
 #! /bin/bash
-if [[ -e /firstrun ]]; then
-echo "not first run so skipping initialization"
-else
-echo "Creating the TYPO3 database..."
-echo "create database TYPO3" | mysql -u "$DB_ENV_USER" --password="$DB_ENV_PASS" -h db -P "$DB_PORT_3306_TCP_PORT"
-while [ $? -ne 0 ]; do
-sleep 5
-echo "create database TYPO3" | mysql -u "$DB_ENV_USER" --password="$DB_ENV_PASS" -h db -P "$DB_PORT_3306_TCP_PORT"
-echo "show tables" | mysql -u "$DB_ENV_USER" --password="$DB_ENV_PASS" -h db -P "$DB_PORT_3306_TCP_PORT" TYPO3
-done
-touch /firstrun
+if [ -d /var/etc/nginx ]; then
+	ln -sf /var/etc/nginx /etc/nginx/conf
+	if [ ! -z "$SITES_CONFIGS" ]; then
+		IFS=","
+		SITES=($SITES_CONFIGS)
+		for x in "${SITES[@]}"
+		do
+			if [ -f "/etc/nginx/conf/sites/$x" ]; then
+				echo "Linking site $x"
+				ln -sf "/etc/nginx/conf/sites/$x" "/etc/nginx/sites-enabled/$x"
+			fi
+		done
+	else
+		echo "Linking default site"
+		ln -sf /etc/nginx/conf/sites/default /etc/nginx/sites-enabled/default
+	fi
 fi
 service php5-fpm start
 nginx 
