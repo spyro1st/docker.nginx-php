@@ -1,57 +1,41 @@
-# Docker TYPO3 CMS - Debian Wheezy
+# Docker nginx with php5
+Use in combination with digitalpatrioten/nginx-configurations
 
-This is basically the same container as hbokh/docker-typo3-cms, but with the Debian Wheezy base image the result is a **far smaller image** than with Ubuntu!  
-For more information see [Building good docker images](http://jonathan.bergknoff.com/journal/building-good-docker-images).  
-The packages for PHP 5.5 and nginx are taken from [Dotdeb](http://www.dotdeb.org/).  
+Sample Vagrantfile
 
-This container comes with the latest [TYPO3 CMS](http://typo3.org/typo3-cms/) version 6.2 (LTS) on NGINX and PHP-FPM.  
-Great for testing and demo's.   
-Inspired by and borrowed from [paimpozhil/magento-docker](https://registry.hub.docker.com/u/paimpozhil/magento-docker/).
-
-## Start the containers
-
-The TYPO3-container needs a MySQL-container to link to.  
-I used [paintedfox/mariadb](https://registry.hub.docker.com/u/paintedfox/mariadb/) (which equals MySQL 5.5).  
-
-First install and start the database:  
-`docker run -td --name mariadb -e USER=user -e PASS=password paintedfox/mariadb`
-
-Followed by the webserver on port 80 and linked to the database:  
-`docker run -td --name typo3-cms-wheezy -p 80:80 --link mariadb:db hbokh/docker-typo3-cms-wheezy`
-
-Next, open a webbrowser to *http://< container IP >/* and configure TYPO3.  
-For the database-host use the name "db", with USER and PASS as set for the database-container.
-
-## Build the container
-
-`git clone https://github.com/hbokh/docker-typo3-cms-wheezy.git .`
-
-`docker build --rm=true -t hbokh/docker-typo3-cms-wheezy .`
-
-`docker run -td -p 80:80 --link mariadb:db hbokh/docker-typo3-cms-wheezy`
-
-## TODO
-
-- Mount external data inside the container.
-
-## Issues
-
-TYPO3 gives this error after installation:  
-
-![image](https://github.com/hbokh/docker-typo3-cms/raw/master/TYPO3_error.png)
-
-This is related to [TYPO3-CORE-SA-2014-001: Multiple Vulnerabilities in TYPO3 CMS](http://typo3.org/teams/security/security-bulletins/typo3-core/typo3-core-sa-2014-001/)
-
-A fix is to login into the container and add a line to file `/var/www/site/htdocs/typo3conf/LocalConfiguration.php`, using *docker exec* (introduced in docker v1.3):
-
-`$ docker exec -it typo3-cms-wheezy bash`  
-`root@01c255c6173d:/# vi /var/www/site/htdocs/typo3conf/LocalConfiguration.php`
-
-At the bottom of the file, within the SYS-array: 
-
-	'SYS' => array(
-                [ ... ],
-		'trustedHostsPattern' => '.*',
-	),
-
-This is somewhat of a showstopper to use the container straight away...
+	# -*- mode: ruby -*-
+	# vi: set ft=ruby :
+	
+	# Vagrantfile API/syntax version. Don't touch unless you know what you're doing!
+	VAGRANTFILE_API_VERSION = "2"
+	
+	Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
+	  config.vm.box = "phusion/ubuntu-14.04-amd64"
+	  config.vm.network "private_network", ip: "192.168.33.10"
+	  config.vm.synced_folder "./", "/vagrant", id: "vagrant-root",
+	      owner: "www-data",
+	      group: "www-data",
+	      mount_options: ["dmode=755,fmode=644"]
+	  config.vm.provider :virtualbox do |vb|
+	    vb.customize ["modifyvm", :id, "--natnet1", "172.16/12"]
+	    vb.customize ["modifyvm", :id, "--memory", "2048"]
+	  end
+	  config.vm.provision "docker" do |d|
+	    d.pull_images "mysql"
+	    d.pull_images "digitalpatrioten/nginx-configurations"
+	    d.pull_images "digitalpatrioten/nginx-php5"
+	    d.pull_images "obi12341/solr-typo3"
+	    d.run "mysql",
+	      image: "mysql",
+	      args: "--name mysql -e MYSQL_ROOT_PASSWORD=password -p 3306:3306"
+	    d.run "obi12341/solr-typo3",
+	      image: "obi12341/solr-typo3",
+	      args: "--name solr -p 8080:8080"
+	    d.run "digitalpatrioten/nginx-configurations",
+	      image: "digitalpatrioten/nginx-configurations",
+	      args: "--name nginx-configurations"
+	    d.run "digitalpatrioten/nginx-php5",
+	      image: "digitalpatrioten/nginx-php5",
+	      args: "-v '/vagrant:/var/www' --volumes-from nginx-configurations -e 'SITES_CONFIGS=default-typo3,default-ssl-typo3' -p 80:80 -p 443:443 --link mysql:mysql --link solr:solr"
+	    end
+	end
