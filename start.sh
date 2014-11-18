@@ -2,6 +2,7 @@
 if [ -d /var/etc/nginx ]; then
 	ln -sf /var/etc/nginx /etc/nginx/conf
 	if [ ! -z "$SITES_CONFIGS" ]; then
+		unlink /etc/nginx/sites-enabled/default
 		IFS=","
 		SITES=($SITES_CONFIGS)
 		for x in "${SITES[@]}"
@@ -17,4 +18,4 @@ if [ -d /var/etc/nginx ]; then
 	fi
 fi
 service php5-fpm start
-nginx 
+nginx
