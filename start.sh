@@ -17,5 +17,6 @@ if [ -d /var/etc/nginx ]; then
 		ln -sf /etc/nginx/conf/sites/default /etc/nginx/sites-enabled/default
 	fi
 fi
+echo -e 'mailhub='$SMTP_HOST'\nAuthUser='$SMTP_USER'\nAuthPass='$SMTP_PASSWORD'\nUseSTARTTLS=yes\nUseTLS=yes' > /etc/ssmtp/ssmtp.conf
 service php5-fpm start
 nginx

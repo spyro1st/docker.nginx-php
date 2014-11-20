@@ -20,8 +20,7 @@ RUN apt-get update -qq && \
     echo 'xdebug.max_nesting_level = 1000' >> /etc/php5/fpm/conf.d/20-xdebug.ini && \
     echo 'xdebug.idekey = PHPSTORM' >> /etc/php5/fpm/conf.d/20-xdebug.ini && \
     echo 'xdebug.remote_enable = 1' >> /etc/php5/fpm/conf.d/20-xdebug.ini && \
-    echo 'xdebug.remote_connect_back = 1' >> /etc/php5/fpm/conf.d/20-xdebug.ini && \
-    echo -e 'mailhub='$SMTP_HOST'\nAuthUser='$SMTP_USER'\nAuthPass='$SMTP_PASSWORD'\nUseSTARTTLS=yes\nUseTLS=yes' > /etc/ssmtp/ssmtp.conf
+    echo 'xdebug.remote_connect_back = 1' >> /etc/php5/fpm/conf.d/20-xdebug.ini
 
 ADD start.sh /start.sh
 
