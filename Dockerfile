@@ -12,7 +12,7 @@ RUN echo "deb http://dotdeb.netmirror.org/ stable all" >> /etc/apt/sources.list
 RUN echo "deb-src http://dotdeb.netmirror.org/ stable all" >> /etc/apt/sources.list
 
 RUN apt-get update -qq && \
-    apt-get install -qqy unzip nginx mysql-client vim-tiny php5 php5-cli php5-common php5-curl php5-fpm php5-gd php5-imagick php5-mcrypt php5-memcache php5-mysql graphicsmagick ssmtp && \
+    apt-get install -qqy unzip nginx mysql-client vim-tiny php5 php5-cli php5-common php5-curl php5-fpm php5-gd php5-imagick php5-mcrypt php5-memcache php5-mysql graphicsmagick ssl-cert ssmtp && \
     apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* && \
     sed -i 's/max_execution_time = 30/max_execution_time = 240/g' /etc/php5/fpm/php.ini && \
     sed -i 's/post_max_size = 8M/post_max_size = 20M/g' /etc/php5/fpm/php.ini && \
