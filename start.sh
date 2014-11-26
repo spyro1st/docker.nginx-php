@@ -17,6 +17,9 @@ if [ -d /var/etc/nginx ]; then
 		ln -sf /etc/nginx/conf/sites/default /etc/nginx/sites-enabled/default
 	fi
 fi
+if [[ "$OVERRIDE_DOCROOT" ]]; then
+	sed -i -e "s/\/var\/www/$(echo $OVERRIDE_DOCROOT | sed -e 's/[\/&]/\\&/g')/g" base
+fi
 echo -e 'mailhub='$SMTP_HOST'\nAuthUser='$SMTP_USER'\nAuthPass='$SMTP_PASSWORD'\nUseSTARTTLS=yes\nUseTLS=yes\nFromLineOverride=yes' > /etc/ssmtp/ssmtp.conf
 service php5-fpm start
 nginx
