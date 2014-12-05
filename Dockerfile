@@ -10,6 +10,8 @@ RUN rm -rf dotdeb.gpg
 
 RUN echo "deb http://dotdeb.netmirror.org/ stable all" >> /etc/apt/sources.list
 RUN echo "deb-src http://dotdeb.netmirror.org/ stable all" >> /etc/apt/sources.list
+RUN echo "deb http://packages.dotdeb.org wheezy-php55 all" >> /etc/apt/sources.list
+RUN echo "deb-src http://packages.dotdeb.org wheezy-php55 all" >> /etc/apt/sources.list
 
 RUN apt-get update -qq && \
     apt-get install -qqy unzip nginx mysql-client vim-tiny php5 php5-cli php5-common php5-curl php5-fpm php5-gd php5-imagick php5-mcrypt php5-memcache php5-mysqlnd php5-xdebug graphicsmagick ssl-cert ssmtp && \
