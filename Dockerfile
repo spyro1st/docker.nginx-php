@@ -18,10 +18,15 @@ RUN apt-get update -qq && \
     sed -i 's/max_execution_time = 30/max_execution_time = 240/g' /etc/php5/fpm/php.ini && \
     sed -i 's/post_max_size = 8M/post_max_size = 20M/g' /etc/php5/fpm/php.ini && \
     sed -i 's/upload_max_filesize = 2M/upload_max_filesize = 20M/g' /etc/php5/fpm/php.ini && \
+    sed -i 's/display_errors = Off/display_errors = On/g' /etc/php5/fpm/php.ini && \
+    sed -i 's/;error_log = syslog/error_log = \/tmp\/php_errors/g' /etc/php5/fpm/php.ini && \
     echo 'xdebug.max_nesting_level = 1000' >> /etc/php5/fpm/conf.d/20-xdebug.ini && \
     echo 'xdebug.idekey = PHPSTORM' >> /etc/php5/fpm/conf.d/20-xdebug.ini && \
     echo 'xdebug.remote_enable = 1' >> /etc/php5/fpm/conf.d/20-xdebug.ini && \
     echo 'xdebug.remote_connect_back = 1' >> /etc/php5/fpm/conf.d/20-xdebug.ini
+
+RUN touch /tmp/php_errors
+RUN chmod 777 /tmp/php_errors
 
 ADD start.sh /start.sh
 
