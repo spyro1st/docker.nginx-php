@@ -19,7 +19,9 @@ RUN apt-get update -qq && \
     sed -i 's/post_max_size = 8M/post_max_size = 20M/g' /etc/php5/fpm/php.ini && \
     sed -i 's/upload_max_filesize = 2M/upload_max_filesize = 20M/g' /etc/php5/fpm/php.ini && \
     sed -i 's/display_errors = Off/display_errors = On/g' /etc/php5/fpm/php.ini && \
-    sed -i 's/;error_log = syslog/error_log = \/tmp\/php_errors/g' /etc/php5/fpm/php.ini && \
+    sed -i 's/;error_log = syslog/error_log = \/proc\/self\/fd\/2/g' /etc/php5/fpm/php.ini && \
+    sed -i 's/access_log \/var\/log\/nginx\/access.log;/access_log \/proc\/self\/fd\/2 combined;/g' /etc/nginx/nginx.conf && \
+    sed -i 's/error_log \/var\/log\/nginx\/error.log;/error_log \/proc\/self\/fd\/2 error;/g' /etc/nginx/nginx.conf && \
     echo 'xdebug.max_nesting_level = 1000' >> /etc/php5/fpm/conf.d/20-xdebug.ini && \
     echo 'xdebug.idekey = PHPSTORM' >> /etc/php5/fpm/conf.d/20-xdebug.ini && \
     echo 'xdebug.remote_enable = 1' >> /etc/php5/fpm/conf.d/20-xdebug.ini && \
