@@ -27,9 +27,6 @@ RUN apt-get update -qq && \
     echo 'xdebug.remote_enable = 1' >> /etc/php5/fpm/conf.d/20-xdebug.ini && \
     echo 'xdebug.remote_connect_back = 1' >> /etc/php5/fpm/conf.d/20-xdebug.ini
 
-RUN touch /tmp/php_errors
-RUN chmod 777 /tmp/php_errors
-
 ADD start.sh /start.sh
 
 RUN chmod 0755 /start.sh
