@@ -8,8 +8,8 @@ RUN wget http://www.dotdeb.org/dotdeb.gpg
 RUN apt-key add dotdeb.gpg
 RUN rm -rf dotdeb.gpg
 
-RUN echo "deb http://dotdeb.netmirror.org/ wheezy all" >> /etc/apt/sources.list
-RUN echo "deb-src http://dotdeb.netmirror.org/ wheezy all" >> /etc/apt/sources.list
+RUN echo "deb http://dotdeb.netmirror.org/ wheezy-php56 all" >> /etc/apt/sources.list
+RUN echo "deb-src http://dotdeb.netmirror.org/ wheezy-php56 all" >> /etc/apt/sources.list
 
 RUN apt-get update -qq && \
     apt-get install -qqy unzip nginx-extras mysql-client vim-tiny php5 php5-cli php5-common php5-curl php5-fpm php5-gd php5-imagick php5-mcrypt php5-memcache php5-mysqlnd php-pear php5-xsl php5-xdebug graphicsmagick ssl-cert ssmtp && \
