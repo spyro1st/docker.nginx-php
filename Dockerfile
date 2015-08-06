@@ -11,8 +11,6 @@ RUN wget http://www.dotdeb.org/dotdeb.gpg
 RUN apt-key add dotdeb.gpg
 RUN rm -rf dotdeb.gpg
 
-RUN echo "deb http://dotdeb.netmirror.org/ stable all" >> /etc/apt/sources.list
-RUN echo "deb-src http://dotdeb.netmirror.org/ stable all" >> /etc/apt/sources.list
 RUN echo "deb http://packages.dotdeb.org wheezy-php55 all" >> /etc/apt/sources.list
 RUN echo "deb-src http://packages.dotdeb.org wheezy-php55 all" >> /etc/apt/sources.list
 
