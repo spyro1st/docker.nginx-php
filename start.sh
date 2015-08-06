@@ -13,8 +13,10 @@ if [ -d /var/etc/nginx ]; then
             fi
         done
     else
-        echo "Linking default site"
-        ln -sf /etc/nginx/conf/sites/default /etc/nginx/sites-enabled/default
+        echo "Linking default site if not exist"
+        if [ ! -f "/etc/nginx/sites-enabled/default" ]; then
+            ln -sf /etc/nginx/conf/sites/default /etc/nginx/sites-enabled/default
+        fi
     fi
 fi
 
@@ -28,5 +30,8 @@ if [ ! -z "$DISABLE_XDEBUG" ]; then
     rm -rf /etc/php5/fpm/conf.d/20-xdebug.ini
 fi
 
+chmod 0600 /var/spool/cron/crontabs/*
+
+service cron start
 service php5-fpm start
-nginx
+service nginx start
