@@ -4,6 +4,9 @@ MAINTAINER info@digitalpatrioten.com
 
 RUN apt-get update -qq && apt-get install -qqy wget
 
+RUN echo "Europe/Berlin" > /etc/timezone
+RUN dpkg-reconfigure tzdata
+
 RUN wget http://www.dotdeb.org/dotdeb.gpg
 RUN apt-key add dotdeb.gpg
 RUN rm -rf dotdeb.gpg
@@ -12,7 +15,7 @@ RUN echo "deb http://dotdeb.netmirror.org/ wheezy-php56 all" >> /etc/apt/sources
 RUN echo "deb-src http://dotdeb.netmirror.org/ wheezy-php56 all" >> /etc/apt/sources.list
 
 RUN apt-get update -qq && \
-    apt-get install -qqy unzip nginx-extras mysql-client vim-tiny php5 php5-cli php5-common php5-curl php5-fpm php5-gd php5-imagick php5-mcrypt php5-memcache php5-mysqlnd php-pear php5-xsl php5-xdebug graphicsmagick ssl-cert ssmtp && \
+    apt-get install -qqy procps cron unzip nginx-extras mysql-client vim-tiny php5 php5-cli php5-common php5-curl php5-fpm php5-gd php5-imagick php5-mcrypt php5-memcache php5-mysqlnd php-pear php5-xsl php5-xdebug graphicsmagick ssl-cert ssmtp && \
     apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* && \
     sed -i 's/;date.timezone =/date.timezone = "Europe\/Berlin"/g' /etc/php5/fpm/php.ini && \
     sed -i 's/max_execution_time = 30/max_execution_time = 240/g' /etc/php5/fpm/php.ini && \
