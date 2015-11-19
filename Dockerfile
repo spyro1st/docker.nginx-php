@@ -4,7 +4,7 @@ MAINTAINER info@digitalpatrioten.com
 
 RUN apt-get update -qq && apt-get install -qqy wget
 
-RUN echo "Europe/Berlin" > /etc/timezone 
+RUN echo "Europe/Berlin" > /etc/timezone
 RUN dpkg-reconfigure tzdata
 
 RUN wget http://www.dotdeb.org/dotdeb.gpg
