@@ -28,10 +28,8 @@ echo -e 'mailhub='$SMTP_HOST'\nAuthUser='$SMTP_USER'\nAuthPass='$SMTP_PASSWORD'\
 
 if [ ! -z "$DISABLE_XDEBUG" ]; then
     rm -rf /etc/php5/fpm/conf.d/20-xdebug.ini
+    rm -rf /etc/php5/cli/conf.d/20-xdebug.ini
 fi
 
 chmod 0600 /var/spool/cron/crontabs/*
-
-service cron start
-service php5-fpm start
-service nginx start
+chsh -s /bin/bash www-data
