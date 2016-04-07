@@ -1,4 +1,4 @@
-# Docker nginx with php5
+# Docker nginx with php
 Use in combination with digitalpatrioten/nginx-configurations
 
 Sample Vagrantfile
@@ -23,7 +23,7 @@ Sample Vagrantfile
 	  config.vm.provision "docker" do |d|
 	    d.pull_images "mysql"
 	    d.pull_images "digitalpatrioten/nginx-configurations"
-	    d.pull_images "digitalpatrioten/nginx-php5"
+	    d.pull_images "digitalpatrioten/nginx-php"
 	    d.pull_images "obi12341/solr-typo3"
 	    d.run "mysql",
 	      image: "mysql",
@@ -34,8 +34,8 @@ Sample Vagrantfile
 	    d.run "digitalpatrioten/nginx-configurations",
 	      image: "digitalpatrioten/nginx-configurations",
 	      args: "--name nginx-configurations"
-	    d.run "digitalpatrioten/nginx-php5",
-	      image: "digitalpatrioten/nginx-php5",
+	    d.run "digitalpatrioten/nginx-php",
+	      image: "digitalpatrioten/nginx-php",
 	      args: "-v '/vagrant:/var/www' --volumes-from nginx-configurations -e 'SITES_CONFIGS=default-typo3,default-ssl-typo3' -p 80:80 -p 443:443 --link mysql:mysql --link solr:solr"
 	    end
 	end

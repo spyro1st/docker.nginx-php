@@ -41,7 +41,6 @@
   <component name="ProjectResources">
     <resource url="http://typo3.org/ns/TYPO3/Twitter/Bootstrap/ViewHelpers" location="$USER_HOME$/Dropbox/Development/XSD/twitterBootstrap.xsd" />
   </component>
-  <component name="ProjectRootManager" version="2" />
   <component name="masterDetails">
     <states>
       <state key="ScopeChooserConfigurable.UI">
@@ -58,4 +57,3 @@
     </states>
   </component>
 </project>
-
