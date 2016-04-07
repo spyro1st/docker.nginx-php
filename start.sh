@@ -31,7 +31,4 @@ if [ ! -z "$DISABLE_XDEBUG" ]; then
 fi
 
 chmod 0600 /var/spool/cron/crontabs/*
-
-service cron start
-service php5-fpm start
-service nginx start
+chsh -s /bin/bash www-data
