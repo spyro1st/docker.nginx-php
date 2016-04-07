@@ -25,6 +25,7 @@ RUN apt-get update -qq && \
     sed -i 's/;error_log = syslog/error_log = \/proc\/self\/fd\/2/g' /etc/php5/fpm/php.ini && \
     sed -i 's/access_log \/var\/log\/nginx\/access.log;/access_log \/proc\/self\/fd\/2 combined;/g' /etc/nginx/nginx.conf && \
     sed -i 's/error_log \/var\/log\/nginx\/error.log;/error_log \/proc\/self\/fd\/2 error;/g' /etc/nginx/nginx.conf && \
+    sed -i 's/listen = \/var\/run\/php5-fpm.sock/listen = \/var\/run\/php-fpm.sock/g' /etc/php5/fpm/pool.d/www.conf && \
     echo 'xdebug.max_nesting_level = 1000' >> /etc/php5/fpm/conf.d/20-xdebug.ini && \
     echo 'xdebug.idekey = PHPSTORM' >> /etc/php5/fpm/conf.d/20-xdebug.ini && \
     echo 'xdebug.remote_enable = 1' >> /etc/php5/fpm/conf.d/20-xdebug.ini && \
