@@ -30,11 +30,14 @@ RUN apt-get update -qq && \
     echo 'xdebug.idekey = PHPSTORM' >> /etc/php/7.0/fpm/conf.d/20-xdebug.ini && \
     echo 'xdebug.remote_enable = 1' >> /etc/php/7.0/fpm/conf.d/20-xdebug.ini && \
     echo 'xdebug.remote_connect_back = 1' >> /etc/php/7.0/fpm/conf.d/20-xdebug.ini
+    sed -i 's/;date.timezone =/date.timezone = "Europe\/Berlin"/g' /etc/php/7.0/fpm/php.ini && \
 
 COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 COPY start.sh /start.sh
 
-RUN mkdir -p /var/run/sshd /var/log/supervisor /run/php
+RUN mkdir -p /var/run/sshd /var/log/supervisor /run/php /var/www/.ssh
+RUN chown -R www-data:www-data /var/www
+
 RUN echo "daemon off;" >> /etc/nginx/nginx.conf
 
 CMD ["/usr/bin/supervisord"]

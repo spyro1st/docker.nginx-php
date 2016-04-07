@@ -31,3 +31,4 @@ if [ ! -z "$DISABLE_XDEBUG" ]; then
 fi
 
 chmod 0600 /var/spool/cron/crontabs/*
+chsh -s /bin/bash www-data
