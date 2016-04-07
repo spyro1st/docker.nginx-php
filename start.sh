@@ -33,5 +33,5 @@ fi
 chmod 0600 /var/spool/cron/crontabs/*
 
 service cron start
-service php5-fpm start
+service php7.0-fpm start
 service nginx start
