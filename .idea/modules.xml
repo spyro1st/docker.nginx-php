@@ -2,7 +2,8 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/../docker.nginx-php/.idea/docker.nginx-php5.iml" filepath="$PROJECT_DIR$/../docker.nginx-php/.idea/docker.nginx-php5.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/docker.nginx-php.iml" filepath="$PROJECT_DIR$/.idea/docker.nginx-php.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/docker.nginx-php5.iml" filepath="$PROJECT_DIR$/.idea/docker.nginx-php5.iml" />
     </modules>
   </component>
 </project>
