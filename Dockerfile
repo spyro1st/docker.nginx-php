@@ -18,6 +18,7 @@ RUN apt-get update -qq && \
     apt-get install -qqy supervisor openssh-server bzip2 git curl procps cron unzip nginx-extras mysql-client vim-tiny php7.0 php7.0-cli php7.0-common php7.0-intl php7.0-curl php7.0-fpm php7.0-gd php7.0-imagick php7.0-mcrypt php7.0-memcached php7.0-mysql php-pear php7.0-xsl php7.0-xdebug graphicsmagick ssl-cert ssmtp && \
     apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* && \
     sed -i 's/;date.timezone =/date.timezone = "Europe\/Berlin"/g' /etc/php/7.0/fpm/php.ini && \
+    sed -i 's/;date.timezone =/date.timezone = "Europe\/Berlin"/g' /etc/php/7.0/fpm/php.ini && \
     sed -i 's/max_execution_time = 30/max_execution_time = 240/g' /etc/php/7.0/fpm/php.ini && \
     sed -i 's/post_max_size = 8M/post_max_size = 20M/g' /etc/php/7.0/fpm/php.ini && \
     sed -i 's/upload_max_filesize = 2M/upload_max_filesize = 20M/g' /etc/php/7.0/fpm/php.ini && \
