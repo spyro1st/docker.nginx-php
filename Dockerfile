@@ -41,6 +41,8 @@ RUN chown -R www-data:www-data /var/www
 
 RUN echo "daemon off;" >> /etc/nginx/nginx.conf
 
+VOLUME /var/www
+
 CMD ["/usr/bin/supervisord"]
 
 EXPOSE 22 80 443
