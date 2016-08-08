@@ -19,6 +19,7 @@ RUN apt-get update -qq && \
     apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* && \
     sed -i 's/;date.timezone =/date.timezone = "Europe\/Berlin"/g' /etc/php/7.0/fpm/php.ini && \
     sed -i 's/;date.timezone =/date.timezone = "Europe\/Berlin"/g' /etc/php/7.0/fpm/php.ini && \
+    sed -i 's/memory_limit = 128M/memory_limit = 256M/g' /etc/php/7.0/fpm/php.ini && \
     sed -i 's/max_execution_time = 30/max_execution_time = 240/g' /etc/php/7.0/fpm/php.ini && \
     sed -i 's/post_max_size = 8M/post_max_size = 20M/g' /etc/php/7.0/fpm/php.ini && \
     sed -i 's/upload_max_filesize = 2M/upload_max_filesize = 20M/g' /etc/php/7.0/fpm/php.ini && \
