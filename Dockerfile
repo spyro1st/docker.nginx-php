@@ -25,6 +25,7 @@ RUN apt-get update -qq && \
     sed -i 's/upload_max_filesize = 2M/upload_max_filesize = 20M/g' /etc/php/7.0/fpm/php.ini && \
     sed -i 's/display_errors = Off/display_errors = On/g' /etc/php/7.0/fpm/php.ini && \
     sed -i 's/;error_log = syslog/error_log = \/proc\/self\/fd\/2/g' /etc/php/7.0/fpm/php.ini && \
+    sed -i 's/; max_input_vars = 1000/max_input_vars = 1500/g' /etc/php/7.0/fpm/php.ini && \
     sed -i 's/access_log \/var\/log\/nginx\/access.log;/access_log \/proc\/self\/fd\/2 combined;/g' /etc/nginx/nginx.conf && \
     sed -i 's/error_log \/var\/log\/nginx\/error.log;/error_log \/proc\/self\/fd\/2 error;/g' /etc/nginx/nginx.conf && \
     sed -i 's/listen = \/run\/php\/php7.0-fpm.sock/listen = \/var\/run\/php-fpm.sock/g' /etc/php/7.0/fpm/pool.d/www.conf && \
