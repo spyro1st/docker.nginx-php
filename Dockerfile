@@ -28,7 +28,7 @@ RUN apt-get update -qq && \
     echo 'xdebug.max_nesting_level = 1000' >> /etc/php/7.0/fpm/conf.d/20-xdebug.ini && \
     echo 'xdebug.idekey = PHPSTORM' >> /etc/php/7.0/fpm/conf.d/20-xdebug.ini && \
     echo 'xdebug.remote_enable = 1' >> /etc/php/7.0/fpm/conf.d/20-xdebug.ini && \
-    echo 'xdebug.remote_connect_back = 1' >> /etc/php/7.0/fpm/conf.d/20-xdebug.ini && \
+    echo 'xdebug.remote_connect_back = 1' >> /etc/php/7.0/fpm/conf.d/20-xdebug.ini
 
 COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 COPY start.sh /start.sh
