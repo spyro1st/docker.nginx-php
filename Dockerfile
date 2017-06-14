@@ -18,7 +18,7 @@ RUN echo "deb http://ftp.hosteurope.de/mirror/packages.dotdeb.org/ jessie all" >
 RUN echo "deb-src http://ftp.hosteurope.de/mirror/packages.dotdeb.org/ jessie all" >> /etc/apt/sources.list
 
 RUN apt-get update -qq && \
-    apt-get install -qqy python-setuptools supervisor openssh-server bzip2 git curl procps cron unzip nginx-extras mysql-client vim-tiny libpcre3 php7.0 php7.0-cli php7.0-common php7.0-mbstring php7.0-intl php7.0-curl php7.0-fpm php7.0-gd php7.0-imagick php7.0-mcrypt php7.0-memcached php7.0-mysql php-pear php7.0-xml php7.0-xsl php7.0-soap php7.0-xdebug php7.0-zip graphicsmagick ssl-cert ssmtp && \
+    apt-get install -qqy locales python-setuptools supervisor openssh-server bzip2 git curl procps cron unzip nginx-extras mysql-client vim-tiny libpcre3 php7.0 php7.0-cli php7.0-common php7.0-mbstring php7.0-intl php7.0-curl php7.0-fpm php7.0-gd php7.0-imagick php7.0-mcrypt php7.0-memcached php7.0-mysql php-pear php7.0-xml php7.0-xsl php7.0-soap php7.0-xdebug php7.0-zip graphicsmagick ssl-cert ssmtp && \
     apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* && \
     sed -i 's/;date.timezone =/date.timezone = "Europe\/Berlin"/g' /etc/php/7.0/fpm/php.ini && \
     sed -i 's/memory_limit = 128M/memory_limit = 256M/g' /etc/php/7.0/fpm/php.ini && \
@@ -34,6 +34,9 @@ RUN apt-get update -qq && \
     echo 'xdebug.idekey = PHPSTORM' >> /etc/php/7.0/fpm/conf.d/20-xdebug.ini && \
     echo 'xdebug.remote_enable = 1' >> /etc/php/7.0/fpm/conf.d/20-xdebug.ini && \
     echo 'xdebug.remote_connect_back = 1' >> /etc/php/7.0/fpm/conf.d/20-xdebug.ini
+
+RUN cp /usr/share/i18n/SUPPORTED /etc/locale.gen
+RUN locale-gen
 
 # Supervisor Config
 RUN /usr/bin/easy_install supervisor
