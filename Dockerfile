@@ -2,6 +2,9 @@ FROM debian:wheezy
 
 MAINTAINER info@digitalpatrioten.com
 
+# Let the conatiner know that there is no tty
+ENV DEBIAN_FRONTEND noninteractive
+
 RUN apt-get update -qq && apt-get install -qqy wget
 
 RUN echo "Europe/Berlin" > /etc/timezone
@@ -33,10 +36,14 @@ RUN apt-get update -qq && \
     echo 'xdebug.remote_enable = 1' >> /etc/php5/fpm/conf.d/20-xdebug.ini && \
     echo 'xdebug.remote_connect_back = 1' >> /etc/php5/fpm/conf.d/20-xdebug.ini
 
-COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
-COPY start.sh /start.sh
+# Supervisor Config
+RUN /usr/bin/easy_install supervisor
+RUN /usr/bin/easy_install supervisor-stdout
 
-RUN mkdir -p /var/run/sshd /var/log/supervisor /run/php /var/www/.ssh
+COPY ./supervisord.conf /etc/supervisor/conf.d/supervisor.conf
+COPY ./start.sh /start.sh
+
+RUN mkdir -p /var/run/sshd /var/www/.ssh /var/run/php
 RUN chown -R www-data:www-data /var/www
 
 RUN echo "daemon off;" >> /etc/nginx/nginx.conf
