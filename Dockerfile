@@ -8,7 +8,7 @@ ENV DEBIAN_FRONTEND noninteractive
 RUN apt-get update -qq && apt-get install -qqy wget
 
 RUN echo "Europe/Berlin" > /etc/timezone
-RUN dpkg-reconfigure -f noninteractiv tzdata
+RUN dpkg-reconfigure -f noninteractive tzdata
 
 RUN wget http://www.dotdeb.org/dotdeb.gpg
 RUN apt-key add dotdeb.gpg
