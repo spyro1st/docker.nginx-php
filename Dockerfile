@@ -2,6 +2,9 @@ FROM debian:wheezy
 
 MAINTAINER info@digitalpatrioten.com
 
+# Let the conatiner know that there is no tty
+ENV DEBIAN_FRONTEND noninteractive
+
 RUN apt-get update -qq && apt-get install -qqy wget
 
 RUN echo "Europe/Berlin" > /etc/timezone
@@ -15,7 +18,7 @@ RUN echo "deb http://dotdeb.netmirror.org/ wheezy-php56 all" >> /etc/apt/sources
 RUN echo "deb-src http://dotdeb.netmirror.org/ wheezy-php56 all" >> /etc/apt/sources.list
 
 RUN apt-get update -qq && \
-    apt-get install -qqy supervisor openssh-server bzip2 git curl procps cron unzip nginx-extras mysql-client vim-tiny php5 php5-cli php5-common php5-intl php5-curl php5-fpm php5-gd php5-imagick php5-mcrypt php5-memcache php5-mysqlnd php-pear php5-xsl php5-xdebug graphicsmagick ssl-cert ssmtp && \
+    apt-get install -qqy locales python-setuptools supervisor openssh-server bzip2 git curl procps cron unzip nginx-extras mysql-client vim-tiny php5 php5-cli php5-common php5-intl php5-curl php5-fpm php5-gd php5-imagick php5-mcrypt php5-memcache php5-mysqlnd php-pear php5-xsl php5-xdebug graphicsmagick ssl-cert ssmtp && \
     apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* && \
     sed -i 's/;date.timezone =/date.timezone = "Europe\/Berlin"/g' /etc/php5/fpm/php.ini && \
     sed -i 's/;date.timezone =/date.timezone = "Europe\/Berlin"/g' /etc/php5/cli/php.ini && \
@@ -33,10 +36,17 @@ RUN apt-get update -qq && \
     echo 'xdebug.remote_enable = 1' >> /etc/php5/fpm/conf.d/20-xdebug.ini && \
     echo 'xdebug.remote_connect_back = 1' >> /etc/php5/fpm/conf.d/20-xdebug.ini
 
-COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
-COPY start.sh /start.sh
+RUN cp /usr/share/i18n/SUPPORTED /etc/locale.gen
+RUN locale-gen
 
-RUN mkdir -p /var/run/sshd /var/log/supervisor /run/php /var/www/.ssh
+# Supervisor Config
+RUN /usr/bin/easy_install supervisor
+RUN /usr/bin/easy_install supervisor-stdout
+
+COPY ./supervisord.conf /etc/supervisor/conf.d/supervisor.conf
+COPY ./start.sh /start.sh
+
+RUN mkdir -p /var/run/sshd /var/www/.ssh /var/run/php
 RUN chown -R www-data:www-data /var/www
 
 RUN echo "daemon off;" >> /etc/nginx/nginx.conf

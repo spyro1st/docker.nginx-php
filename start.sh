@@ -1,36 +1,57 @@
-#! /bin/bash
-if [ -d /var/etc/nginx ]; then
-    ln -sf /var/etc/nginx /etc/nginx/conf
-    if [ ! -z "$SITES_CONFIGS" ]; then
-        unlink /etc/nginx/sites-enabled/default
-        IFS=","
-        SITES=($SITES_CONFIGS)
-        for x in "${SITES[@]}"
-        do
-            if [ -f "/etc/nginx/conf/sites/$x" ]; then
-                echo "Linking site $x"
-                ln -sf "/etc/nginx/conf/sites/$x" "/etc/nginx/sites-enabled/$x"
-            fi
-        done
-    else
-        echo "Linking default site if not exist"
-        if [ ! -f "/etc/nginx/sites-enabled/default" ]; then
-            ln -sf /etc/nginx/conf/sites/default /etc/nginx/sites-enabled/default
-        fi
-    fi
-fi
+FROM debian:jessie
 
-if [[ "$OVERRIDE_DOCROOT" ]]; then
-    sed -i -e "s/\/var\/www/$(echo $OVERRIDE_DOCROOT | sed -e 's/[\/&]/\\&/g')/g" base
-fi
+MAINTAINER info@digitalpatrioten.com
 
-echo -e 'mailhub='$SMTP_HOST'\nAuthUser='$SMTP_USER'\nAuthPass='$SMTP_PASSWORD'\nUseSTARTTLS=yes\nUseTLS=yes\nFromLineOverride=yes' > /etc/ssmtp/ssmtp.conf
+# Let the conatiner know that there is no tty
+ENV DEBIAN_FRONTEND noninteractive
 
-if [ ! -z "$DISABLE_XDEBUG" ]; then
-    rm -rf /etc/php5/fpm/conf.d/20-xdebug.ini
-    rm -rf /etc/php5/cli/conf.d/20-xdebug.ini
-fi
+RUN apt-get update -qq && apt-get install -qqy wget
 
-chmod 0600 /var/spool/cron/crontabs/*
-chown www-data:www-data -R /var/www
-chsh -s /bin/bash www-data
+RUN echo "Europe/Berlin" > /etc/timezone
+RUN dpkg-reconfigure -f noninteractive tzdata
+
+RUN wget http://www.dotdeb.org/dotdeb.gpg
+RUN apt-key add dotdeb.gpg
+RUN rm -rf dotdeb.gpg
+
+RUN echo "deb http://ftp.hosteurope.de/mirror/packages.dotdeb.org/ jessie all" >> /etc/apt/sources.list
+RUN echo "deb-src http://ftp.hosteurope.de/mirror/packages.dotdeb.org/ jessie all" >> /etc/apt/sources.list
+
+RUN apt-get update -qq && \
+    apt-get install -qqy locales python-setuptools supervisor openssh-server bzip2 git curl procps cron unzip nginx-extras mysql-client vim-tiny libpcre3 php7.0 php7.0-cli php7.0-common php7.0-mbstring php7.0-intl php7.0-curl php7.0-fpm php7.0-gd php7.0-imagick php7.0-mcrypt php7.0-memcached php7.0-mysql php-pear php7.0-xml php7.0-xsl php7.0-soap php7.0-xdebug php7.0-zip graphicsmagick ssl-cert ssmtp && \
+    apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* && \
+    sed -i 's/;date.timezone =/date.timezone = "Europe\/Berlin"/g' /etc/php/7.0/fpm/php.ini && \
+    sed -i 's/memory_limit = 128M/memory_limit = 256M/g' /etc/php/7.0/fpm/php.ini && \
+    sed -i 's/max_execution_time = 30/max_execution_time = 240/g' /etc/php/7.0/fpm/php.ini && \
+    sed -i 's/post_max_size = 8M/post_max_size = 20M/g' /etc/php/7.0/fpm/php.ini && \
+    sed -i 's/upload_max_filesize = 2M/upload_max_filesize = 20M/g' /etc/php/7.0/fpm/php.ini && \
+    sed -i 's/display_errors = Off/display_errors = On/g' /etc/php/7.0/fpm/php.ini && \
+    sed -i 's/; max_input_vars = 1000/max_input_vars = 1500/g' /etc/php/7.0/fpm/php.ini && \
+    sed -i 's/;daemonize = yes/daemonize =  no/g' /etc/php/7.0/fpm/php-fpm.conf && \
+    sed -i 's/;error_log = php_errors.log/error_log = \/var\/log\/php_error.log/g' /etc/php/7.0/fpm/php.ini && \
+    sed -i 's/listen = \/run\/php\/php7.0-fpm.sock/listen = \/var\/run\/php-fpm.sock/g' /etc/php/7.0/fpm/pool.d/www.conf && \
+    echo 'xdebug.max_nesting_level = 1000' >> /etc/php/7.0/fpm/conf.d/20-xdebug.ini && \
+    echo 'xdebug.idekey = PHPSTORM' >> /etc/php/7.0/fpm/conf.d/20-xdebug.ini && \
+    echo 'xdebug.remote_enable = 1' >> /etc/php/7.0/fpm/conf.d/20-xdebug.ini && \
+    echo 'xdebug.remote_connect_back = 1' >> /etc/php/7.0/fpm/conf.d/20-xdebug.ini
+
+RUN cp /usr/share/i18n/SUPPORTED /etc/locale.gen
+RUN locale-gen
+
+# Supervisor Config
+RUN /usr/bin/easy_install supervisor
+RUN /usr/bin/easy_install supervisor-stdout
+
+COPY ./supervisord.conf /etc/supervisor/conf.d/supervisor.conf
+COPY ./start.sh /start.sh
+
+RUN mkdir -p /var/run/sshd /var/www/.ssh /var/run/php
+RUN chown -R www-data:www-data /var/www
+
+RUN echo "daemon off;" >> /etc/nginx/nginx.conf
+
+VOLUME /var/www
+
+CMD ["/usr/bin/supervisord"]
+
+EXPOSE 22 80 443
